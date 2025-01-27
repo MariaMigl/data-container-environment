@@ -1,0 +1,24 @@
+version: '3'
+services:
+  data-science:
+    restart: always
+    container_name: data-science-environment
+    image: maria-data-science-environment
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./jupyter-science:/jupyter-folder
+      - data-science-backup:/backup-folder
+  data-engineer:
+    restart: always
+    container_name: data-engineer-environment
+    image: maria-data-engineer-environment
+    ports:
+      - "8989:8888"
+    volumes:
+      - ./jupyter-engineer:/jupyter-folder
+      - data-engineer-backup:/backup-folder
+
+volumes:
+  data-science-backup:
+  data-engineer-backup:

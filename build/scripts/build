@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Build the image
+cd ../$1
+
+image_name=$(cat image-name.dat)
+
+# Calculate the current checksum of requirements.txt
+current_checksum=$(sha512sum requirements.txt | cut -d' ' -f1)
+
+previous_checksum=$(docker run -it --rm -a stdout --entrypoint cat $image_name /requirements/hash.txt)
+
+current_checksum_cleaned=$(echo -n "$current_checksum" | tr -d '[:space:]')
+previous_checksum_cleaned=$(echo -n "$previous_checksum" | tr -d '[:space:]')
+
+no_cache_command=""
+# Check if the checksums are different
+if [[ "$current_checksum_cleaned" != "$previous_checksum_cleaned" ]]; then
+    echo "##################################################################################################################"
+    echo "#############################          Changes detected in requirements.txt          #############################"
+    echo "##################################################################################################################"
+    no_cache_command="--no-cache"
+fi
+
+cd ..
+docker rmi $image_name
+docker build $no_cache_command -t $image_name --build-arg REQUIREMENTS_DIR=$1 -f Dockerfile .
