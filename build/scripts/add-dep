@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Build the image
+environment=$1
+package_name=$2
+
+container_running=$(docker ps | grep "$environment-environment" | wc -l)
+if [ "$container_running" == "0" ]; then
+    echo "container $environment-environment is not running"
+else
+    docker exec -it $environment-environment pip install $package_name > /dev/null
+    PACKAGE=$(docker exec -it $environment-environment pip freeze | grep $package_name)
+    PACKAGE_NAME=$(echo -n "$PACKAGE" | cut -d'=' -f1)
+    PACKAGE_VERSION=$(echo -n "$PACKAGE" | cut -d'=' -f3)
+    echo "Adding package $PACKAGE_NAME to requirements in version $PACKAGE_VERSION"
+
+    echo "$PACKAGE" >> ../$environment/requirements.txt
+fi

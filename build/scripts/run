@@ -1,6 +1,0 @@
-#!/bin/bash
-
-docker rm -f my-de-container
-
-docker run -d -p 8989:8888 -v my-de-volume:/backup-folder -v $(pwd)/../../jupyter:/jupyter-folder --restart always --name my-de-container my-de-image
-

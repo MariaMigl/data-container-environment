@@ -11,3 +11,4 @@ kaggle==1.6.17
 fastparquet==2024.11.0
 pytest==8.3.4
 flake8==7.1.1
+
