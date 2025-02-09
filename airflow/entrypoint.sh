@@ -9,7 +9,7 @@ airflow users create \
     --firstname maria \
     --lastname almeida \
     --role Admin \
-    --email maira@gmail.com \
+    --email maria@mail.com \
     --password mariapassword
 
 echo "Starting $1..."

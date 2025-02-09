@@ -1,11 +1,5 @@
 FROM apache/airflow:slim-2.10.4-python3.12
 
-# Copy the requirements file
-COPY requirements.txt .
-
-# Install the dependencies from the requirements file
-RUN pip install --no-cache-dir -r requirements.txt
-
 # Copy the DAGs directory to the Airflow home directory
 COPY dags/ /opt/airflow/dags/
 
