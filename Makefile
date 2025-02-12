@@ -8,18 +8,17 @@ ENVIRONMENT := data-science## Environment to run commands
 help:
 	@utils/help.sh Makefile
 
-
 .PHONY: build
 build: build-data-science build-data-engineer ## Build all project containers
 
 .PHONY: build-data-science
-build-data-science: ## Build the data science container
+build-data-science: clean-data-science-container ## Build the data science container
 	@echo "Building data-science container..."
 	@cd build/scripts/; ./build data-science
 
 
 .PHONY: build-data-engineer
-build-data-engineer: ## Build the data engineer container
+build-data-engineer: clean-data-engineer-container ## Build the data engineer container
 	@echo "Building data-engineer container..."
 	@cd build/scripts/; ./build data-engineer
 
@@ -51,6 +50,40 @@ clean-data-environment: clean-data-science-container clean-data-science-containe
 stop-data-science-container: ## Stop data science containers
 	@echo "Stopping data science containers..."
 	@docker compose stop data-science
+
+.PHONY: check-data-science-backup
+check-data-science-backup: ## Check data science backup
+	@echo "Data science backup:\n\n"
+	@docker compose exec -it data-science bash -c 'ls /backup-folder'
+
+.PHONY: restore-data-science-backup
+restore-data-science-backup: ## Restore data science backup
+	@echo "Restoring data science backup\n"
+	@docker compose exec -it data-science bash -c 'cp -r /backup-folder/. /jupyter-folder/'
+	@echo "Restored!"
+
+.PHONY: clean-data-science-backup
+clean-data-science-backup: ## Clean data science backup
+	@echo "Cleaning data science backup\n"
+	@docker compose exec -it data-science bash -c 'rm -rf /backup-folder/*'
+	@echo "Cleaned!"
+
+.PHONY: force-data-science-backup
+force-data-science-backup: ## Force data science backup
+	@echo "Backing up data science content\n"
+	@docker compose exec -it data-science bash -c 'cp -r /jupyter-folder/. /backup-folder/'
+	@echo "Backup done!"
+
+.PHONY: check-data-engineer-backup
+check-data-engineer-backup: ## Check data engineer backup
+	@echo "Data engineer backup:\n\n"
+	@docker compose exec -it data-engineer bash -c 'ls /backup-folder'
+
+.PHONY: restore-data-engineer-backup
+restore-data-engineer-backup: ## Restore data engineer backup
+	@echo "Restoring data engineer backup\n"
+	@docker compose exec -it data-engineer bash -c 'cp -r /backup-folder/. /jupyter-folder/'
+	@echo "Restored!"
 
 .PHONY: stop-data-engineer-container
 stop-data-engineer-container: ## Stop data engineer containers
@@ -90,9 +123,9 @@ add-data-engineer-dependency: ## Add a dependency to data engineer containers
 .PHONY: run-airflow
 run-airflow: ## Run all airflow containers
 	@echo "Running airflow containers"
-	@cd airflow; docker compose up -d
+	@cd airflow; docker compose up --build -d
 
 .PHONY: clean-airflow
 clean-airflow: ## Stop and remove all airflow containers
 	@echo "Running airflow containers"
-	@cd airflow; docker compose down
+	@cd airflow; docker compose down --rmi local

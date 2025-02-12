@@ -51,9 +51,7 @@ To update the following dependencies update the file `data-science/requirements.
 To build the docker image run the following command
 
 ```sh
-cd build/scripts
-chmod 700 build
-./build data-science
+make build-data-science
 ```
 
 this will build a docker image named `maria-data-science-environment`. The name of this image can be changes in the file `data-science/image-name.dat`
@@ -87,9 +85,7 @@ To update the following dependencies update the file `data-engineer/requirements
 To build the docker image run the following command
 
 ```sh
-cd build/scripts
-chmod 700 build
-./build data-engineer
+make build-data-engineer
 ```
 
 this will build a docker image named `maria-data-engineer-environment`. The name of this image can be changes in the file `data-engineer/image-name.dat`
@@ -103,7 +99,7 @@ To run the either container localy locally it is a requirement that you go throu
 ### Data Science
 
 ```sh
-docker compose up -d data-science
+make run-data-science
 ```
 
 This command runs a container named `data-science-environment` that mounts a two way bind volume locally in `jupyter-science` folder.
@@ -115,7 +111,7 @@ By running this container a volume is created with name `aggregate-containers_da
 ### Data Engineer
 
 ```sh
-docker compose up -d data-engineer
+make run-data-engineer
 ```
 
 This command runs a container named `data-engineer-environment` that mounts a two way bind volume locally in `jupyter-engineer` folder.
@@ -127,7 +123,7 @@ By running this container a volume is created with name `aggregate-containers_da
 ### Both containers
 
 ```sh
-docker compose up -d
+make run
 ```
 
 This command mounts two volumes that are two way bind: `jupyter-engineer` & `jupyter-science`. 
@@ -185,14 +181,12 @@ The jupyter password for both jupyter servers is **maria**.
 
 This component runs an airflow container with all of its dependencies.
 
-
 ### Running
 
 To run airflow run the command
 
 ```sh
-cd airflow 
-docker compose up -d
+make run-airflow
 ```
 
 ### Using interface
