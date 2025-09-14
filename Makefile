@@ -111,12 +111,12 @@ clean-data-engineer-container: ## Stop and remove data engineer containers
 	@docker compose rm -fs data-engineer
 
 .PHONY: add-data-science-dependency
-add-data-science-dependency: ## Add a dependency to data science containers
+add-data-science-dependency: ## Add a dependency to data science containers `package=<package>`
 	@echo "Adding data science dependency"
 	@cd build/scripts/; ./add-dep data-science $(package)
 
 .PHONY: add-data-science-dependency
-add-data-engineer-dependency: ## Add a dependency to data engineer containers
+add-data-engineer-dependency: ## Add a dependency to data engineer containers `package=<package>`
 	@echo "Adding data engineer dependency"
 	@cd build/scripts/; ./add-dep data-engineer $(package)
 
